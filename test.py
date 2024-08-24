@@ -10,13 +10,13 @@ def get_stock_data(symbol, period="1mo"):
     return data
 
 # Function to create candlestick chart
-def create_candlestick_chart(data):
+def create_candlestick_chart(data, name):
     fig = go.Figure(data=[go.Candlestick(x=data.index,
                 open=data['Open'],
                 high=data['High'],
                 low=data['Low'],
                 close=data['Close'])])
-    fig.update_layout(title='AAPL Stock Price',
+    fig.update_layout(title=f'{AAPL} Stock Price',
                       xaxis_title='Date',
                       yaxis_title='Price (USD)',
                       xaxis_rangeslider_visible=False)
@@ -60,9 +60,9 @@ data2 = get_stock_data("NVDA")
 data3 = get_stock_data("MSFT")
 
 # Create candlestick chart
-fig = create_candlestick_chart(data)
-fig2 = create_candlestick_chart(data2)
-fig3 = create_candlestick_chart(data3)
+fig = create_candlestick_chart(data, "AAPL")
+fig2 = create_candlestick_chart(data2, "NVDA")
+fig3 = create_candlestick_chart(data3, "MSFT")
 
 # Use Streamlit's plotly_chart with click event handling
 selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
