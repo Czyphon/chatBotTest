@@ -61,17 +61,16 @@ data = get_stock_data("AAPL")
 fig = create_candlestick_chart(data)
 
 # Use Streamlit's plotly_chart with click event handling
-#selected_points = plotly_chart(fig, use_container_width=True, key="candlestick_chart")
-
+selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
 
 # Check if a candle was clicked
-#if selected_points:
-#    point = selected_points["points"][0]
-#    date = datetime.utcfromtimestamp(point["x"] / 1000)
-#    open_price, high, low, close = point["open"], point["high"], point["low"], point["close"]
-#    display_education(date, open_price, high, low, close)
-#else:
-#    st.write("Click on a candle to see detailed information and learn about candlestick analysis.")
+if selected_points:
+    point = selected_points["points"][0]
+    date = datetime.utcfromtimestamp(point["x"] / 1000)
+    open_price, high, low, close = point["open"], point["high"], point["low"], point["close"]
+    display_education(date, open_price, high, low, close)
+else:
+    st.write("Click on a candle to see detailed information and learn about candlestick analysis.")
 
 st.sidebar.header("About This Tool")
 st.sidebar.write("This interactive chart helps beginner investors learn about candlestick analysis using AAPL stock data. Click on any candle to get detailed information and educational content.")
