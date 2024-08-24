@@ -56,13 +56,18 @@ st.write("Click on any candle to learn more about candlestick analysis!")
 
 # Fetch AAPL stock data
 data = get_stock_data("AAPL")
+data2 = get_stock_data("NVDA")
+data3 = get_stock_data("MSFT")
 
 # Create candlestick chart
 fig = create_candlestick_chart(data)
+fig2 = create_candlestick_chart(data2)
+fig3 = create_candlestick_chart(data3)
 
 # Use Streamlit's plotly_chart with click event handling
 selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
-second_chart = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
+second_chart = st.plotly_chart(fig2, use_container_width=True, key="candlestick_chart")
+third_chart = st.plotly_chart(fig3, use_container_width=True, key="candlestick_chart")
 
 # Check if a candle was clicked
 if selected_points:
