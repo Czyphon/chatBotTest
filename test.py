@@ -16,7 +16,7 @@ def create_candlestick_chart(data, name):
                 high=data['High'],
                 low=data['Low'],
                 close=data['Close'])])
-    fig.update_layout(title=f'{AAPL} Stock Price',
+    fig.update_layout(title=f'{name} Stock Price',
                       xaxis_title='Date',
                       yaxis_title='Price (USD)',
                       xaxis_rangeslider_visible=False)
@@ -26,10 +26,10 @@ def create_candlestick_chart(data, name):
 def display_education(date, open_price, high, low, close):
     st.subheader("Candlestick Analysis")
     st.write(f"Date: {date.strftime('%Y-%m-%d')}")
-    st.write(f"Open: ${open_price:.2f}")
-    st.write(f"High: ${high:.2f}")
-    st.write(f"Low: ${low:.2f}")
-    st.write(f"Close: ${close:.2f}")
+    st.write(f"Open: ${open_price:.4f}")
+    st.write(f"High: ${high:.4f}")
+    st.write(f"Low: ${low:.4f}")
+    st.write(f"Close: ${close:.4f}")
     
     body = close - open_price
     if body >= 0:
@@ -44,8 +44,8 @@ def display_education(date, open_price, high, low, close):
     
     wick_up = high - max(open_price, close)
     wick_down = min(open_price, close) - low
-    st.write(f"Upper Wick: ${wick_up:.2f}")
-    st.write(f"Lower Wick: ${wick_down:.2f}")
+    st.write(f"Upper Wick: ${wick_up:.4f}")
+    st.write(f"Lower Wick: ${wick_down:.4f}")
     st.write("The wicks (shadows) represent the price extremes for the day. Long wicks might indicate indecision or reversal.")
     
     st.write("Remember: A single candlestick provides limited information. Always consider the broader context and use multiple indicators for investment decisions.")
