@@ -62,6 +62,7 @@ fig = create_candlestick_chart(data)
 
 # Use Streamlit's plotly_chart with click event handling
 selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
+second_chart = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
 
 # Check if a candle was clicked
 if selected_points:
