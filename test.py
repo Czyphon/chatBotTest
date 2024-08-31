@@ -67,8 +67,7 @@ fig.update_layout(
 click_data = st.session_state.get("click_data")
 
 if click_data:
-    st.write("You clicked on:")
-    st.write(click_data)
+    st.sidebar.write("You clicked on " + click_data )
 
 # Use Streamlit's plotly_chart with click event handling
 selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
