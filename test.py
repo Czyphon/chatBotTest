@@ -65,7 +65,7 @@ selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestic
 
 if selected_points:
     #point = selected_points.values[0]
-    date = datetime.utcfromtimestamp(point["x"] / 1000)
+    date = datetime.utcfromtimestamp(1000)
     #open_price, high, low, close = point["open"], point["high"], point["low"], point["close"]
     display_education(date, 0,0,0,0)
 else:
