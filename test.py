@@ -1,7 +1,6 @@
 import streamlit as st
 import yfinance as yf
 import plotly.graph_objects as go
-from datetime import datetime, timedelta
 
 # Function to fetch stock data
 def get_stock_data(symbol, period="1mo"):
@@ -52,28 +51,29 @@ def display_education(date, open_price, high, low, close):
 
 # Main Streamlit app
 st.title("Interactive AAPL Stock Candlestick Chart")
-st.write("Click on any candle to learn more about candlestick analysis!")
+st.write("Select a date to learn more about candlestick analysis!")
 
 # Fetch AAPL stock data
 data = get_stock_data("AAPL")
 
 # Create candlestick chart
 fig = create_candlestick_chart(data)
+st.plotly_chart(fig, use_container_width=True)
 
-# Use Streamlit's plotly_chart with click event handling
-selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
+# Date selection
+selected_date = st.selectbox("Select a date", data.index.strftime('%Y-%m-%d'))
 
-k = 0
-if selected_points:
-    #point = selected_points.values[0]
-    k += 1
-    date = datetime.utcfromtimestamp(1000)
-    #open_price, high, low, close = point["open"], point["high"], point["low"], point["close"]
-    display_education(date, k,k,k,k)
-else:
-    st.write("Click on a candle to see detailed information and learn about candlestick analysis.")
-#st.write("Selected data:", selected_points)
+# Display details for the selected date
+if selected_date:
+    selected_row = data.loc[selected_date]
+    display_education(
+        pd.to_datetime(selected_date),
+        selected_row['Open'],
+        selected_row['High'],
+        selected_row['Low'],
+        selected_row['Close']
+    )
 
 st.sidebar.header("About This Tool")
-st.sidebar.write("This interactive chart helps beginner investors learn about candlestick analysis using AAPL stock data. Click on any candle to get detailed information and educational content.")
+st.sidebar.write("This interactive chart helps beginner investors learn about candlestick analysis using AAPL stock data. Select a date to get detailed information and educational content.")
 st.sidebar.write("Data provided by Yahoo Finance via yfinance.")
