@@ -62,7 +62,7 @@ fig = create_candlestick_chart(data)
 
 # Use Streamlit's plotly_chart with click event handling
 selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
-st.write("Selected data:", selected_points)
+#st.write("Selected data:", selected_points)
 
 st.sidebar.header("About This Tool")
 st.sidebar.write("This interactive chart helps beginner investors learn about candlestick analysis using AAPL stock data. Click on any candle to get detailed information and educational content.")
