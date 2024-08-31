@@ -63,11 +63,13 @@ fig = create_candlestick_chart(data)
 # Use Streamlit's plotly_chart with click event handling
 selected_points = st.plotly_chart(fig, use_container_width=True, key="candlestick_chart")
 
+k = 0
 if selected_points:
     #point = selected_points.values[0]
+    k += 1
     date = datetime.utcfromtimestamp(1000)
     #open_price, high, low, close = point["open"], point["high"], point["low"], point["close"]
-    display_education(date, 0,0,0,0)
+    display_education(date, k,k,k,k)
 else:
     st.write("Click on a candle to see detailed information and learn about candlestick analysis.")
 #st.write("Selected data:", selected_points)
