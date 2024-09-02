@@ -1,3 +1,4 @@
 yfinance
 plotly
+plotly_events
 pandas
