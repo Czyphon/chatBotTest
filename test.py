@@ -2,6 +2,7 @@ import streamlit as st
 import yfinance as yf
 import plotly.graph_objects as go
 import pandas as pd
+from streamlit_plotly_events import plotly_events
 
 def get_stock_data(ticker, timeframe, interval):
     stock = yf.Ticker(ticker)
@@ -58,10 +59,9 @@ if ticker:
     data = get_stock_data(ticker, timeframe_options[timeframe], interval_options[interval])
     fig = create_candlestick_chart(data, ticker)
     
-    selected_point = st.plotly_chart(fig, use_container_width=True)
+    selected_points = plotly_events(fig, click_event=True)
     
-    if selected_point:
-        selected_date = selected_point.get('x')
-        if selected_date:
-            with st.expander("Stock Information", expanded=True):
-                display_stock_info(data, pd.Timestamp(selected_date))
+    if selected_points:
+        selected_date = pd.Timestamp(selected_points[0]['x'])
+        with st.expander("Stock Information", expanded=True):
+            display_stock_info(data, selected_date)
