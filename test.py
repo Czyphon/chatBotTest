@@ -1,80 +1,46 @@
 import streamlit as st
 import yfinance as yf
-import pandas as pd
 import plotly.graph_objects as go
 
-# Function to fetch stock data
-def get_stock_data(symbol, period="1mo"):
-    stock = yf.Ticker(symbol)
-    data = stock.history(period=period)
+def get_stock_data(ticker, timeframe):
+    stock = yf.Ticker(ticker)
+    data = stock.history(period=timeframe)
     return data
 
-# Function to create candlestick chart
-def create_candlestick_chart(data):
-    fig = go.Figure(data=[go.Candlestick(x=data.index,
-                open=data['Open'],
-                high=data['High'],
-                low=data['Low'],
-                close=data['Close'])])
-    fig.update_layout(title='AAPL Stock Price',
-                      xaxis_title='Date',
-                      yaxis_title='Price (USD)',
-                      xaxis_rangeslider_visible=False)
+def create_candlestick_chart(data, ticker):
+    fig = go.Figure(data=[go.Candlestick(
+        x=data.index,
+        open=data['Open'],
+        high=data['High'],
+        low=data['Low'],
+        close=data['Close']
+    )])
+    fig.update_layout(title=f'{ticker} Stock Price', xaxis_title='Date', yaxis_title='Price')
     return fig
 
-# Function to display educational content
-def display_education(date, open_price, high, low, close):
-    st.subheader("Candlestick Analysis")
+def display_stock_info(data, selected_point):
+    date = data.index[selected_point]
+    info = data.iloc[selected_point]
     st.write(f"Date: {date.strftime('%Y-%m-%d')}")
-    st.write(f"Open: ${open_price:.2f}")
-    st.write(f"High: ${high:.2f}")
-    st.write(f"Low: ${low:.2f}")
-    st.write(f"Close: ${close:.2f}")
+    st.write(f"Open: ${info['Open']:.2f}")
+    st.write(f"High: ${info['High']:.2f}")
+    st.write(f"Low: ${info['Low']:.2f}")
+    st.write(f"Close: ${info['Close']:.2f}")
+    st.write(f"Volume: {info['Volume']:,}")
+    # Add more info or sentiment analysis here
+
+st.title("Stock Chart Explorer")
+
+ticker = st.text_input("Enter stock ticker:", value="AAPL").upper()
+timeframe = st.selectbox("Select timeframe:", ["1mo", "3mo", "6mo", "1y", "2y", "5y", "max"])
+
+if ticker:
+    data = get_stock_data(ticker, timeframe)
+    fig = create_candlestick_chart(data, ticker)
     
-    body = close - open_price
-    if body >= 0:
-        candle_type = "Bullish (Green) Candle"
-        interpretation = "The stock price increased during this trading day. This might indicate buying pressure."
-    else:
-        candle_type = "Bearish (Red) Candle"
-        interpretation = "The stock price decreased during this trading day. This might indicate selling pressure."
+    selected_point = st.plotly_chart(fig, use_container_width=True, key="chart")
     
-    st.write(f"Candle Type: {candle_type}")
-    st.write(f"Interpretation: {interpretation}")
-    
-    wick_up = high - max(open_price, close)
-    wick_down = min(open_price, close) - low
-    st.write(f"Upper Wick: ${wick_up:.2f}")
-    st.write(f"Lower Wick: ${wick_down:.2f}")
-    st.write("The wicks (shadows) represent the price extremes for the day. Long wicks might indicate indecision or reversal.")
-    
-    st.write("Remember: A single candlestick provides limited information. Always consider the broader context and use multiple indicators for investment decisions.")
-
-# Main Streamlit app
-st.title("Interactive AAPL Stock Candlestick Chart")
-st.write("Select a date to learn more about candlestick analysis!")
-
-# Fetch AAPL stock data
-data = get_stock_data("AAPL")
-
-# Create candlestick chart
-fig = create_candlestick_chart(data)
-st.plotly_chart(fig, use_container_width=True)
-
-# Date selection
-selected_date = st.selectbox("Select a date", data.index.strftime('%Y-%m-%d'))
-
-# Display details for the selected date
-if selected_date:
-    selected_row = data.loc[selected_date]
-    display_education(
-        pd.to_datetime(selected_date),
-        selected_row['Open'],
-        selected_row['High'],
-        selected_row['Low'],
-        selected_row['Close']
-    )
-
-st.sidebar.header("About This Tool")
-st.sidebar.write("This interactive chart helps beginner investors learn about candlestick analysis using AAPL stock data. Select a date to get detailed information and educational content.")
-st.sidebar.write("Data provided by Yahoo Finance via yfinance.")
+    if selected_point and selected_point.get("points"):
+        point_index = selected_point["points"][0]["pointIndex"]
+        with st.expander("Stock Information", expanded=True):
+            display_stock_info(data, point_index)
